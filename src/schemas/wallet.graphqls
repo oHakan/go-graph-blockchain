@@ -1,0 +1,21 @@
+type Wallet {
+  publicKey: String!
+  privateKey: String!
+  address: String!
+}
+
+input TransferToken {
+  rpcLink: String!
+  amount: String!
+  fromPrivate: String!
+  toPublic: String!
+}
+
+input CreateWalletInput {
+  name: String
+}
+
+extend type Mutation {
+  createWallet(input: CreateWalletInput): Wallet!
+  transferToken(input: TransferToken): String!
+}
