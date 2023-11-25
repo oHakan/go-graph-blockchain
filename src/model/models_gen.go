@@ -14,6 +14,15 @@ type CreateWalletInput struct {
 	Name *string `json:"name,omitempty"`
 }
 
+type DeployContractInput struct {
+	Name       string  `json:"name"`
+	Symbol     string  `json:"symbol"`
+	Supply     float64 `json:"supply"`
+	RPCLink    string  `json:"rpcLink"`
+	ChainID    float64 `json:"chainId"`
+	PrivateKey string  `json:"privateKey"`
+}
+
 type TransferToken struct {
 	RPCLink     string `json:"rpcLink"`
 	Amount      string `json:"amount"`

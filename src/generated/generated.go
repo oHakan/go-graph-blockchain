@@ -47,9 +47,10 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Mutation struct {
-		CreateUser    func(childComplexity int, input model.CreateUserInput) int
-		CreateWallet  func(childComplexity int, input *model.CreateWalletInput) int
-		TransferToken func(childComplexity int, input *model.TransferToken) int
+		CreateUser     func(childComplexity int, input model.CreateUserInput) int
+		CreateWallet   func(childComplexity int, input *model.CreateWalletInput) int
+		DeployContract func(childComplexity int, input *model.DeployContractInput) int
+		TransferToken  func(childComplexity int, input *model.TransferToken) int
 	}
 
 	Query struct {
@@ -75,6 +76,7 @@ type MutationResolver interface {
 	CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error)
 	CreateWallet(ctx context.Context, input *model.CreateWalletInput) (*model.Wallet, error)
 	TransferToken(ctx context.Context, input *model.TransferToken) (string, error)
+	DeployContract(ctx context.Context, input *model.DeployContractInput) (string, error)
 }
 type QueryResolver interface {
 	Users(ctx context.Context) ([]*model.User, error)
@@ -122,6 +124,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateWallet(childComplexity, args["input"].(*model.CreateWalletInput)), true
+
+	case "Mutation.deployContract":
+		if e.complexity.Mutation.DeployContract == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deployContract_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeployContract(childComplexity, args["input"].(*model.DeployContractInput)), true
 
 	case "Mutation.transferToken":
 		if e.complexity.Mutation.TransferToken == nil {
@@ -208,6 +222,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputCreateUserInput,
 		ec.unmarshalInputCreateWalletInput,
+		ec.unmarshalInputDeployContractInput,
 		ec.unmarshalInputTransferToken,
 	)
 	first := true
@@ -346,9 +361,19 @@ input CreateWalletInput {
   name: String
 }
 
+input DeployContractInput {
+  name: String!
+  symbol: String!
+  supply: Float!
+  rpcLink: String!
+  chainId: Float!
+  privateKey: String!
+}
+
 extend type Mutation {
   createWallet(input: CreateWalletInput): Wallet!
   transferToken(input: TransferToken): String!
+  deployContract(input: DeployContractInput): String!
 }
 `, BuiltIn: false},
 }
@@ -380,6 +405,21 @@ func (ec *executionContext) field_Mutation_createWallet_args(ctx context.Context
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalOCreateWalletInput2ᚖosmanᚑhakanᚗcomᚋgraphqlᚑblockchainᚋsrcᚋmodelᚐCreateWalletInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deployContract_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.DeployContractInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalODeployContractInput2ᚖosmanᚑhakanᚗcomᚋgraphqlᚑblockchainᚋsrcᚋmodelᚐDeployContractInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -635,6 +675,61 @@ func (ec *executionContext) fieldContext_Mutation_transferToken(ctx context.Cont
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_transferToken_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_deployContract(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deployContract(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeployContract(rctx, fc.Args["input"].(*model.DeployContractInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deployContract(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deployContract_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -3045,6 +3140,80 @@ func (ec *executionContext) unmarshalInputCreateWalletInput(ctx context.Context,
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputDeployContractInput(ctx context.Context, obj interface{}) (model.DeployContractInput, error) {
+	var it model.DeployContractInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"name", "symbol", "supply", "rpcLink", "chainId", "privateKey"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Name = data
+		case "symbol":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("symbol"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Symbol = data
+		case "supply":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("supply"))
+			data, err := ec.unmarshalNFloat2float64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Supply = data
+		case "rpcLink":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("rpcLink"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.RPCLink = data
+		case "chainId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("chainId"))
+			data, err := ec.unmarshalNFloat2float64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ChainID = data
+		case "privateKey":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("privateKey"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.PrivateKey = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputTransferToken(ctx context.Context, obj interface{}) (model.TransferToken, error) {
 	var it model.TransferToken
 	asMap := map[string]interface{}{}
@@ -3145,6 +3314,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "transferToken":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_transferToken(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "deployContract":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deployContract(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -4084,6 +4260,14 @@ func (ec *executionContext) unmarshalOCreateWalletInput2ᚖosmanᚑhakanᚗcom�
 		return nil, nil
 	}
 	res, err := ec.unmarshalInputCreateWalletInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalODeployContractInput2ᚖosmanᚑhakanᚗcomᚋgraphqlᚑblockchainᚋsrcᚋmodelᚐDeployContractInput(ctx context.Context, v interface{}) (*model.DeployContractInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputDeployContractInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 

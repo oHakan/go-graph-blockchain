@@ -7,11 +7,13 @@ import (
 	"log"
 	"math/big"
 
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"osman-hakan.com/graphql-blockchain/src/contract"
 	"osman-hakan.com/graphql-blockchain/src/model"
 )
 
@@ -119,4 +121,57 @@ func TransferToken(rpcLink string, fromPrivateKey string, toPublicKey string, tr
 	}
 
 	return signedTx, err
+}
+
+func DeployContract(rpcLink string, chainId uint64, fromPrivateKey string, tokenName string, tokenSymbol string, tokenSupply uint64) (*common.Address, error) {
+	client, err := GetClient(rpcLink)
+
+	if err != nil {
+		return nil, err
+	}
+
+	privateKey, err := crypto.HexToECDSA(fromPrivateKey)
+	if err != nil {
+		return nil, err
+	}
+
+	publicKey := privateKey.Public()
+	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+	if !ok {
+		return nil, err
+	}
+
+	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
+
+	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	gasPrice, err := client.SuggestGasPrice(context.Background())
+	if err != nil {
+		return nil, err
+	}
+
+	auth, err := bind.NewKeyedTransactorWithChainID(privateKey, big.NewInt(int64(chainId)))
+
+	if err != nil {
+		return nil, err
+	}
+
+	auth.Nonce = big.NewInt(int64(nonce))
+	auth.Value = big.NewInt(0)
+	auth.GasLimit = uint64(15000000)
+	auth.GasPrice = gasPrice
+
+	address, tx, instance, err := contract.DeployContract(auth, client, tokenName, tokenSymbol, tokenSupply)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	fmt.Println(address, tx, instance)
+
+	return &address, nil
 }

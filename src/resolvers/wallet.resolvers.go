@@ -42,3 +42,16 @@ func (r *mutationResolver) TransferToken(ctx context.Context, input *model.Trans
 
 	return "ok", nil
 }
+
+// DeployContract is the resolver for the deployContract field.
+func (r *mutationResolver) DeployContract(ctx context.Context, input *model.DeployContractInput) (string, error) {
+	deployedContractAddress, err := services.DeployContract(input.RPCLink, uint64(input.ChainID), input.PrivateKey, input.Name, input.Symbol, uint64(input.Supply))
+
+	if err != nil {
+		return "", err
+	}
+
+	hexAddress := deployedContractAddress.Hex()
+
+	return hexAddress, nil
+}
