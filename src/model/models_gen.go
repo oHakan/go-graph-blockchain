@@ -23,6 +23,15 @@ type DeployContractInput struct {
 	PrivateKey string  `json:"privateKey"`
 }
 
+type TransferCustomTokenInput struct {
+	FromAddress     string  `json:"fromAddress"`
+	ContractAddress string  `json:"contractAddress"`
+	RPCLink         string  `json:"rpcLink"`
+	ChainID         float64 `json:"chainId"`
+	ToAddress       string  `json:"toAddress"`
+	Amount          float64 `json:"amount"`
+}
+
 type TransferToken struct {
 	RPCLink     string `json:"rpcLink"`
 	Amount      string `json:"amount"`

@@ -175,3 +175,64 @@ func DeployContract(rpcLink string, chainId uint64, fromPrivateKey string, token
 
 	return &address, nil
 }
+
+func TransferCustomToken(rpcLink string, chainId uint64, fromPrivateKey string, contractAddress string, toAddress string, amount uint64) (*string, error) {
+	client, err := GetClient(rpcLink)
+
+	if err != nil {
+		return nil, err
+	}
+
+	tokenAddress := common.HexToAddress(contractAddress)
+	myToken, err := contract.NewContract(tokenAddress, client)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	toAddressTyped := common.HexToAddress(toAddress)
+
+	privateKey, err := crypto.HexToECDSA(fromPrivateKey)
+	if err != nil {
+		return nil, err
+	}
+
+	publicKey := privateKey.Public()
+	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+	if !ok {
+		return nil, err
+	}
+
+	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
+
+	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	gasPrice, err := client.SuggestGasPrice(context.Background())
+	if err != nil {
+		return nil, err
+	}
+
+	auth, err := bind.NewKeyedTransactorWithChainID(privateKey, big.NewInt(int64(chainId)))
+
+	if err != nil {
+		return nil, err
+	}
+
+	auth.Nonce = big.NewInt(int64(nonce))
+	auth.Value = big.NewInt(0)
+	auth.GasLimit = uint64(15000000)
+	auth.GasPrice = gasPrice
+
+	tx, err := myToken.SendToken(auth, toAddressTyped, amount)
+
+	if err != nil {
+		return nil, err
+	}
+
+	hash := tx.Hash().Hex()
+
+	return &hash, nil
+}

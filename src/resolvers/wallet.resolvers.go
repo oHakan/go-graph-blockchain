@@ -55,3 +55,14 @@ func (r *mutationResolver) DeployContract(ctx context.Context, input *model.Depl
 
 	return hexAddress, nil
 }
+
+// TransferCustomToken is the resolver for the transferCustomToken field.
+func (r *mutationResolver) TransferCustomToken(ctx context.Context, input *model.TransferCustomTokenInput) (string, error) {
+	transferTokenAddress, err := services.TransferCustomToken(input.RPCLink, uint64(input.ChainID), input.FromAddress, input.ContractAddress, input.ToAddress, uint64(input.Amount))
+
+	if err != nil {
+		return "", err
+	}
+
+	return *transferTokenAddress, nil
+}

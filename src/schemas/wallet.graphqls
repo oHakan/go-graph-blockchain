@@ -24,8 +24,18 @@ input DeployContractInput {
   privateKey: String!
 }
 
+input TransferCustomTokenInput {
+  fromAddress: String!
+  contractAddress: String!
+  rpcLink: String!
+  chainId: Float!
+  toAddress: String!
+  amount: Float!
+}
+
 extend type Mutation {
   createWallet(input: CreateWalletInput): Wallet!
   transferToken(input: TransferToken): String!
   deployContract(input: DeployContractInput): String!
+  transferCustomToken(input: TransferCustomTokenInput): String!
 }
