@@ -208,7 +208,6 @@ func (_Contract *ContractTransactorRaw) Transact(opts *bind.TransactOpts, method
 func (_Contract *ContractCaller) DOMAINSEPARATOR(opts *bind.CallOpts) ([32]byte, error) {
 	var out []interface{}
 	err := _Contract.contract.Call(opts, &out, "DOMAIN_SEPARATOR")
-
 	if err != nil {
 		return *new([32]byte), err
 	}
@@ -216,7 +215,6 @@ func (_Contract *ContractCaller) DOMAINSEPARATOR(opts *bind.CallOpts) ([32]byte,
 	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
 
 	return out0, err
-
 }
 
 // DOMAINSEPARATOR is a free data retrieval call binding the contract method 0x3644e515.
@@ -239,7 +237,6 @@ func (_Contract *ContractCallerSession) DOMAINSEPARATOR() ([32]byte, error) {
 func (_Contract *ContractCaller) Allowance(opts *bind.CallOpts, owner common.Address, spender common.Address) (*big.Int, error) {
 	var out []interface{}
 	err := _Contract.contract.Call(opts, &out, "allowance", owner, spender)
-
 	if err != nil {
 		return *new(*big.Int), err
 	}
@@ -247,7 +244,6 @@ func (_Contract *ContractCaller) Allowance(opts *bind.CallOpts, owner common.Add
 	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
 
 	return out0, err
-
 }
 
 // Allowance is a free data retrieval call binding the contract method 0xdd62ed3e.
@@ -270,7 +266,6 @@ func (_Contract *ContractCallerSession) Allowance(owner common.Address, spender 
 func (_Contract *ContractCaller) BalanceOf(opts *bind.CallOpts, account common.Address) (*big.Int, error) {
 	var out []interface{}
 	err := _Contract.contract.Call(opts, &out, "balanceOf", account)
-
 	if err != nil {
 		return *new(*big.Int), err
 	}
@@ -278,7 +273,6 @@ func (_Contract *ContractCaller) BalanceOf(opts *bind.CallOpts, account common.A
 	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
 
 	return out0, err
-
 }
 
 // BalanceOf is a free data retrieval call binding the contract method 0x70a08231.
@@ -301,7 +295,6 @@ func (_Contract *ContractCallerSession) BalanceOf(account common.Address) (*big.
 func (_Contract *ContractCaller) Decimals(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
 	err := _Contract.contract.Call(opts, &out, "decimals")
-
 	if err != nil {
 		return *new(uint8), err
 	}
@@ -309,7 +302,6 @@ func (_Contract *ContractCaller) Decimals(opts *bind.CallOpts) (uint8, error) {
 	out0 := *abi.ConvertType(out[0], new(uint8)).(*uint8)
 
 	return out0, err
-
 }
 
 // Decimals is a free data retrieval call binding the contract method 0x313ce567.
@@ -337,7 +329,8 @@ func (_Contract *ContractCaller) Eip712Domain(opts *bind.CallOpts) (struct {
 	VerifyingContract common.Address
 	Salt              [32]byte
 	Extensions        []*big.Int
-}, error) {
+}, error,
+) {
 	var out []interface{}
 	err := _Contract.contract.Call(opts, &out, "eip712Domain")
 
@@ -363,7 +356,6 @@ func (_Contract *ContractCaller) Eip712Domain(opts *bind.CallOpts) (struct {
 	outstruct.Extensions = *abi.ConvertType(out[6], new([]*big.Int)).(*[]*big.Int)
 
 	return *outstruct, err
-
 }
 
 // Eip712Domain is a free data retrieval call binding the contract method 0x84b0196e.
@@ -377,7 +369,8 @@ func (_Contract *ContractSession) Eip712Domain() (struct {
 	VerifyingContract common.Address
 	Salt              [32]byte
 	Extensions        []*big.Int
-}, error) {
+}, error,
+) {
 	return _Contract.Contract.Eip712Domain(&_Contract.CallOpts)
 }
 
@@ -392,7 +385,8 @@ func (_Contract *ContractCallerSession) Eip712Domain() (struct {
 	VerifyingContract common.Address
 	Salt              [32]byte
 	Extensions        []*big.Int
-}, error) {
+}, error,
+) {
 	return _Contract.Contract.Eip712Domain(&_Contract.CallOpts)
 }
 
@@ -402,7 +396,6 @@ func (_Contract *ContractCallerSession) Eip712Domain() (struct {
 func (_Contract *ContractCaller) Name(opts *bind.CallOpts) (string, error) {
 	var out []interface{}
 	err := _Contract.contract.Call(opts, &out, "name")
-
 	if err != nil {
 		return *new(string), err
 	}
@@ -410,7 +403,6 @@ func (_Contract *ContractCaller) Name(opts *bind.CallOpts) (string, error) {
 	out0 := *abi.ConvertType(out[0], new(string)).(*string)
 
 	return out0, err
-
 }
 
 // Name is a free data retrieval call binding the contract method 0x06fdde03.
@@ -433,7 +425,6 @@ func (_Contract *ContractCallerSession) Name() (string, error) {
 func (_Contract *ContractCaller) Nonces(opts *bind.CallOpts, owner common.Address) (*big.Int, error) {
 	var out []interface{}
 	err := _Contract.contract.Call(opts, &out, "nonces", owner)
-
 	if err != nil {
 		return *new(*big.Int), err
 	}
@@ -441,7 +432,6 @@ func (_Contract *ContractCaller) Nonces(opts *bind.CallOpts, owner common.Addres
 	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
 
 	return out0, err
-
 }
 
 // Nonces is a free data retrieval call binding the contract method 0x7ecebe00.
@@ -464,7 +454,6 @@ func (_Contract *ContractCallerSession) Nonces(owner common.Address) (*big.Int, 
 func (_Contract *ContractCaller) Symbol(opts *bind.CallOpts) (string, error) {
 	var out []interface{}
 	err := _Contract.contract.Call(opts, &out, "symbol")
-
 	if err != nil {
 		return *new(string), err
 	}
@@ -472,7 +461,6 @@ func (_Contract *ContractCaller) Symbol(opts *bind.CallOpts) (string, error) {
 	out0 := *abi.ConvertType(out[0], new(string)).(*string)
 
 	return out0, err
-
 }
 
 // Symbol is a free data retrieval call binding the contract method 0x95d89b41.
@@ -495,7 +483,6 @@ func (_Contract *ContractCallerSession) Symbol() (string, error) {
 func (_Contract *ContractCaller) TotalSupply(opts *bind.CallOpts) (*big.Int, error) {
 	var out []interface{}
 	err := _Contract.contract.Call(opts, &out, "totalSupply")
-
 	if err != nil {
 		return *new(*big.Int), err
 	}
@@ -503,7 +490,6 @@ func (_Contract *ContractCaller) TotalSupply(opts *bind.CallOpts) (*big.Int, err
 	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
 
 	return out0, err
-
 }
 
 // TotalSupply is a free data retrieval call binding the contract method 0x18160ddd.
@@ -704,7 +690,6 @@ type ContractApproval struct {
 //
 // Solidity: event Approval(address indexed owner, address indexed spender, uint256 value)
 func (_Contract *ContractFilterer) FilterApproval(opts *bind.FilterOpts, owner []common.Address, spender []common.Address) (*ContractApprovalIterator, error) {
-
 	var ownerRule []interface{}
 	for _, ownerItem := range owner {
 		ownerRule = append(ownerRule, ownerItem)
@@ -725,7 +710,6 @@ func (_Contract *ContractFilterer) FilterApproval(opts *bind.FilterOpts, owner [
 //
 // Solidity: event Approval(address indexed owner, address indexed spender, uint256 value)
 func (_Contract *ContractFilterer) WatchApproval(opts *bind.WatchOpts, sink chan<- *ContractApproval, owner []common.Address, spender []common.Address) (event.Subscription, error) {
-
 	var ownerRule []interface{}
 	for _, ownerItem := range owner {
 		ownerRule = append(ownerRule, ownerItem)
@@ -855,7 +839,6 @@ type ContractEIP712DomainChanged struct {
 //
 // Solidity: event EIP712DomainChanged()
 func (_Contract *ContractFilterer) FilterEIP712DomainChanged(opts *bind.FilterOpts) (*ContractEIP712DomainChangedIterator, error) {
-
 	logs, sub, err := _Contract.contract.FilterLogs(opts, "EIP712DomainChanged")
 	if err != nil {
 		return nil, err
@@ -867,7 +850,6 @@ func (_Contract *ContractFilterer) FilterEIP712DomainChanged(opts *bind.FilterOp
 //
 // Solidity: event EIP712DomainChanged()
 func (_Contract *ContractFilterer) WatchEIP712DomainChanged(opts *bind.WatchOpts, sink chan<- *ContractEIP712DomainChanged) (event.Subscription, error) {
-
 	logs, sub, err := _Contract.contract.WatchLogs(opts, "EIP712DomainChanged")
 	if err != nil {
 		return nil, err
@@ -991,7 +973,6 @@ type ContractTransfer struct {
 //
 // Solidity: event Transfer(address indexed from, address indexed to, uint256 value)
 func (_Contract *ContractFilterer) FilterTransfer(opts *bind.FilterOpts, from []common.Address, to []common.Address) (*ContractTransferIterator, error) {
-
 	var fromRule []interface{}
 	for _, fromItem := range from {
 		fromRule = append(fromRule, fromItem)
@@ -1012,7 +993,6 @@ func (_Contract *ContractFilterer) FilterTransfer(opts *bind.FilterOpts, from []
 //
 // Solidity: event Transfer(address indexed from, address indexed to, uint256 value)
 func (_Contract *ContractFilterer) WatchTransfer(opts *bind.WatchOpts, sink chan<- *ContractTransfer, from []common.Address, to []common.Address) (event.Subscription, error) {
-
 	var fromRule []interface{}
 	for _, fromItem := range from {
 		fromRule = append(fromRule, fromItem)
