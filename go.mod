@@ -1,6 +1,6 @@
 module osman-hakan.com/graphql-blockchain
 
-go 1.21.4
+go 1.23
 
 require (
 	github.com/99designs/gqlgen v0.17.40
