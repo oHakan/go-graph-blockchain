@@ -7,4 +7,4 @@ name = "go"
   import_root = "github.com/oHakan/go-graph-blockchain"
 
 [[transformers]]
-name = "gofmt"
+name = "gofumpt"
