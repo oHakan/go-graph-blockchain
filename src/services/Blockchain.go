@@ -21,7 +21,6 @@ func CreateWallet() (*model.Wallet, error) {
 	var walletModel model.Wallet
 
 	privateKey, err := crypto.GenerateKey()
-
 	if err != nil {
 		log.Fatal(err)
 		return nil, err
@@ -49,7 +48,6 @@ func CreateWallet() (*model.Wallet, error) {
 
 func GetClient(rpcLink string) (*ethclient.Client, error) {
 	client, err := ethclient.Dial(rpcLink)
-
 	if err != nil {
 		fmt.Print(err)
 		return nil, err
@@ -60,7 +58,6 @@ func GetClient(rpcLink string) (*ethclient.Client, error) {
 
 func TransferToken(rpcLink string, fromPrivateKey string, toPublicKey string, transferAmount *big.Int) (*types.Transaction, error) {
 	client, err := GetClient(rpcLink)
-
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +77,6 @@ func TransferToken(rpcLink string, fromPrivateKey string, toPublicKey string, tr
 	toPublicKeyAddressType := common.HexToAddress(toPublicKey)
 
 	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
-
 	if err != nil {
 		return nil, err
 	}
@@ -97,19 +93,16 @@ func TransferToken(rpcLink string, fromPrivateKey string, toPublicKey string, tr
 
 	tx := types.NewTransaction(nonce, toPublicKeyAddressType, value, gasLimit, gasPrice, data)
 	chainID, err := client.NetworkID(context.Background())
-
 	if err != nil {
 		return nil, err
 	}
 
 	ecdsaPrivateKey, err := crypto.HexToECDSA(fromPrivateKey)
-
 	if err != nil {
 		return nil, err
 	}
 
 	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), ecdsaPrivateKey)
-
 	if err != nil {
 		return nil, err
 	}
@@ -125,7 +118,6 @@ func TransferToken(rpcLink string, fromPrivateKey string, toPublicKey string, tr
 
 func DeployContract(rpcLink string, chainId uint64, fromPrivateKey string, tokenName string, tokenSymbol string, tokenSupply uint64) (*common.Address, error) {
 	client, err := GetClient(rpcLink)
-
 	if err != nil {
 		return nil, err
 	}
@@ -154,7 +146,6 @@ func DeployContract(rpcLink string, chainId uint64, fromPrivateKey string, token
 	}
 
 	auth, err := bind.NewKeyedTransactorWithChainID(privateKey, big.NewInt(int64(chainId)))
-
 	if err != nil {
 		return nil, err
 	}
@@ -165,7 +156,6 @@ func DeployContract(rpcLink string, chainId uint64, fromPrivateKey string, token
 	auth.GasPrice = gasPrice
 
 	address, tx, instance, err := contract.DeployContract(auth, client, tokenName, tokenSymbol, tokenSupply)
-
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
@@ -178,14 +168,12 @@ func DeployContract(rpcLink string, chainId uint64, fromPrivateKey string, token
 
 func TransferCustomToken(rpcLink string, chainId uint64, fromPrivateKey string, contractAddress string, toAddress string, amount uint64) (*string, error) {
 	client, err := GetClient(rpcLink)
-
 	if err != nil {
 		return nil, err
 	}
 
 	tokenAddress := common.HexToAddress(contractAddress)
 	myToken, err := contract.NewContract(tokenAddress, client)
-
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -216,7 +204,6 @@ func TransferCustomToken(rpcLink string, chainId uint64, fromPrivateKey string, 
 	}
 
 	auth, err := bind.NewKeyedTransactorWithChainID(privateKey, big.NewInt(int64(chainId)))
-
 	if err != nil {
 		return nil, err
 	}
@@ -227,7 +214,6 @@ func TransferCustomToken(rpcLink string, chainId uint64, fromPrivateKey string, 
 	auth.GasPrice = gasPrice
 
 	tx, err := myToken.SendToken(auth, toAddressTyped, amount)
-
 	if err != nil {
 		return nil, err
 	}

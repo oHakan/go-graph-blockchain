@@ -16,7 +16,6 @@ import (
 // CreateWallet is the resolver for the createWallet field.
 func (r *mutationResolver) CreateWallet(ctx context.Context, input *model.CreateWalletInput) (*model.Wallet, error) {
 	newWallet, err := services.CreateWallet()
-
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +45,6 @@ func (r *mutationResolver) TransferToken(ctx context.Context, input *model.Trans
 // DeployContract is the resolver for the deployContract field.
 func (r *mutationResolver) DeployContract(ctx context.Context, input *model.DeployContractInput) (string, error) {
 	deployedContractAddress, err := services.DeployContract(input.RPCLink, uint64(input.ChainID), input.PrivateKey, input.Name, input.Symbol, uint64(input.Supply))
-
 	if err != nil {
 		return "", err
 	}
@@ -59,7 +57,6 @@ func (r *mutationResolver) DeployContract(ctx context.Context, input *model.Depl
 // TransferCustomToken is the resolver for the transferCustomToken field.
 func (r *mutationResolver) TransferCustomToken(ctx context.Context, input *model.TransferCustomTokenInput) (string, error) {
 	transferTokenAddress, err := services.TransferCustomToken(input.RPCLink, uint64(input.ChainID), input.FromAddress, input.ContractAddress, input.ToAddress, uint64(input.Amount))
-
 	if err != nil {
 		return "", err
 	}
